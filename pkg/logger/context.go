@@ -3,7 +3,6 @@ package logger
 import (
 	"context"
 
-	"github.com/yushafro/effective-mobile-tz/pkg/env"
 	"go.uber.org/zap"
 )
 
@@ -25,17 +24,7 @@ func WithRequestID(ctx context.Context, id string) context.Context {
 func FromContext(ctx context.Context) Logger {
 	l, ok := ctx.Value(loggerKey).(Logger)
 	if !ok {
-		env, ok := ctx.Value(env.EnvKey).(string)
-		if !ok {
-			return &logger{
-				l: zap.L(),
-			}
-		}
-
-		l := NewBootstrap(env)
-		l.Warn(ctx, "logger not found in context, creating bootstrap one")
-
-		return l
+		return nil
 	}
 
 	return l

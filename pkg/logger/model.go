@@ -20,26 +20,6 @@ type logger struct {
 	l *zap.Logger
 }
 
-func NewBootstrap(environment string) Logger {
-	var cfg zap.Config
-	if environment == env.Dev {
-		cfg = zap.NewDevelopmentConfig()
-	} else {
-		cfg = zap.NewProductionConfig()
-	}
-
-	l, err := cfg.Build()
-	if err != nil {
-		return &logger{
-			l: zap.L(),
-		}
-	}
-
-	return &logger{
-		l: l,
-	}
-}
-
 func NewWithConfig(cfg Config, environment string) Logger {
 	var config zap.Config
 	if environment == env.Dev {
