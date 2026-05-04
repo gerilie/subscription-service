@@ -1,9 +1,12 @@
 package logger
 
-import "github.com/caarlos0/env/v11"
+import (
+	"github.com/caarlos0/env/v11"
+	"go.uber.org/zap"
+)
 
 type Config struct {
-	Level string `env:"LEVEL" envDefault:"info"`
+	Level zap.AtomicLevel `env:"LEVEL" envDefault:"info"`
 }
 
 func LoadConfig() (Config, error) {

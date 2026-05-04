@@ -2,6 +2,7 @@ package logger
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/yushafro/effective-mobile-tz/pkg/env"
 	"go.uber.org/zap"
@@ -27,26 +28,10 @@ func NewWithConfig(cfg Config, environment string) (Logger, error) {
 		config = zap.NewProductionConfig()
 	}
 
-	atomicLevel := zap.NewAtomicLevel()
-	switch cfg.Level {
-	case "debug":
-		atomicLevel.SetLevel(zap.DebugLevel)
-	case "info":
-		atomicLevel.SetLevel(zap.InfoLevel)
-	case "warn":
-		atomicLevel.SetLevel(zap.WarnLevel)
-	case "error":
-		atomicLevel.SetLevel(zap.ErrorLevel)
-	case "fatal":
-		atomicLevel.SetLevel(zap.FatalLevel)
-	default:
-		atomicLevel.SetLevel(zap.InfoLevel)
-	}
-	config.Level = atomicLevel
-
+	config.Level = cfg.Level
 	l, err := config.Build()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("build logger: %w", err)
 	}
 
 	return &logger{
