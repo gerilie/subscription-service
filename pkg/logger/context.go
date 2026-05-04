@@ -2,21 +2,24 @@ package logger
 
 import (
 	"context"
+
+	"go.uber.org/zap"
 )
 
 type contextKey struct{}
 
-var (
-	loggerKey    = contextKey{}
-	requestIDKey = contextKey{}
-)
+var loggerKey = contextKey{}
 
 func WithLogger(ctx context.Context, logger Logger) context.Context {
 	return context.WithValue(ctx, loggerKey, logger)
 }
 
 func WithRequestID(ctx context.Context, id string) context.Context {
-	return context.WithValue(ctx, requestIDKey, id)
+	l := FromContext(ctx)
+
+	l = l.With(zap.String("request_id", id))
+
+	return WithLogger(ctx, l)
 }
 
 func FromContext(ctx context.Context) Logger {
