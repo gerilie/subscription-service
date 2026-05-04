@@ -10,6 +10,22 @@ import (
 	"go.uber.org/zap"
 )
 
+// WriteErrors writes validation errors to the HTTP response in JSON format.
+//
+// It converts the provided validator.ValidationErrors into a structured response
+// grouped by field names and writes it with HTTP status 400 (Bad Request).
+//
+// Response format:
+//
+//	{
+//	  "fields": {
+//	    "field_name": "error message",
+//	    "another_field": "error message"
+//	  }
+//	}
+//
+// If writing the response fails, WriteErrors logs the error using the logger
+// extracted from the context.
 func WriteErrors(ctx context.Context, w http.ResponseWriter, ve validator.ValidationErrors) {
 	log := logger.FromContext(ctx)
 	errors := formatErrorsByName(ve)
