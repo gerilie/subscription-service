@@ -9,6 +9,13 @@ import (
 	"github.com/yushafro/effective-mobile-tz/pkg/logger"
 )
 
+// New creates and returns a new PostgreSQL connection pool.
+//
+// It builds a connection string from the provided configuration,
+// initializes a pgx connection pool, and verifies connectivity using Ping.
+//
+// If the connection cannot be established or the ping fails,
+// New returns an error wrapped with additional context.
 func New(ctx context.Context, cfg Config) (*pgxpool.Pool, error) {
 	log := logger.FromContext(ctx)
 
