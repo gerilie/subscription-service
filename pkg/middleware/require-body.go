@@ -6,6 +6,10 @@ import (
 	"github.com/yushafro/effective-mobile-tz/pkg/logger"
 )
 
+// RequireBody is a middleware function that checks if the request body is not empty.
+// It takes an http.Handler as an argument and returns an http.Handler.
+//
+// The RequireBody middleware returns an error if the request body is empty.
 func RequireBody(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()

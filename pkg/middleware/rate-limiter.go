@@ -10,6 +10,10 @@ import (
 	"github.com/yushafro/effective-mobile-tz/pkg/ratelimiter"
 )
 
+// RateLimiter is a middleware function that applies rate limiting to HTTP requests.
+// It takes an http.Handler and an IP rate limiter as arguments and returns an http.Handler.
+//
+// The RateLimiter middleware checks if the request is rate limited and returns an error if it is.
 func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
