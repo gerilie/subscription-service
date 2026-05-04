@@ -16,6 +16,9 @@ func WithLogger(ctx context.Context, logger Logger) context.Context {
 
 func WithRequestID(ctx context.Context, id string) context.Context {
 	l := FromContext(ctx)
+	if l == nil {
+		return ctx
+	}
 
 	l = l.With(zap.String("request_id", id))
 
