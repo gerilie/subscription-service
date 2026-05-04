@@ -7,7 +7,7 @@ func getErrorMessageForStringTag(fe validator.FieldError) string {
 	case "email":
 		return "The field must be a valid email address"
 	case "uuid4":
-		return "The field must be a valid UUID"
+		return "The field must be a valid UUID (version 4)"
 	}
 
 	return ""
