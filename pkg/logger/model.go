@@ -19,7 +19,7 @@ type logger struct {
 	l *zap.Logger
 }
 
-func NewWithConfig(cfg Config, environment string) Logger {
+func NewWithConfig(cfg Config, environment string) (Logger, error) {
 	var config zap.Config
 	if environment == env.Dev {
 		config = zap.NewDevelopmentConfig()
@@ -46,14 +46,12 @@ func NewWithConfig(cfg Config, environment string) Logger {
 
 	l, err := config.Build()
 	if err != nil {
-		return &logger{
-			l: zap.L(),
-		}
+		return nil, err
 	}
 
 	return &logger{
 		l: l,
-	}
+	}, nil
 }
 
 func (l *logger) Stop() error {

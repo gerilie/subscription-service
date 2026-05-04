@@ -30,7 +30,11 @@ func main() {
 		panic(err)
 	}
 
-	log := logger.NewWithConfig(cfg.Logger, cfg.Subscription.Env)
+	log, err := logger.NewWithConfig(cfg.Logger, cfg.Subscription.Env)
+	if err != nil {
+		panic(err)
+	}
+
 	ctx, stop := context.WithTimeout(
 		logger.WithLogger(context.Background(), log),
 		shTO,
