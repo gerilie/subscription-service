@@ -4,4 +4,4 @@ package validation
 type Resp map[string]string
 
 // ValidationPrefix is a constant string used as a prefix for validation error messages.
-const ValidationPrefix = "The field must be"
+const ValidationPrefix = "the field must be"

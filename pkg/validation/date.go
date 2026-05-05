@@ -6,20 +6,22 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// getErrorMessageForDatetimeTag returns a user-friendly error message for date-related validation errors.
+var ErrDatetime = fmt.Errorf("%s in the format 'MM-YYYY'", ValidationPrefix)
+
+// getErrorForDatetimeTag maps a validation error to a user-friendly error.
 //
 // It inspects the validation tag from the provided validator.FieldError
-// and maps it to a corresponding message.
+// and returns a corresponding error value.
 //
 // Supported tags:
-//   - "datetime": the field must follow the "MM-YYYY" format.
+//   - "datetime": the field must match the "MM-YYYY" format.
 //
-// If the validation tag is not recognized, getErrorMessageForDatetimeTag returns an empty string.
-func getErrorMessageForDatetimeTag(fe validator.FieldError) string {
+// If the validation tag is not recognized, it returns nil.
+func getErrorForDatetimeTag(fe validator.FieldError) error {
 	switch fe.Tag() {
 	case "datetime":
-		return fmt.Sprintf("%s in the format 'MM-YYYY'", ValidationPrefix)
+		return ErrDatetime
 	}
 
-	return ""
+	return nil
 }

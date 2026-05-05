@@ -4,20 +4,25 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// formatErrorsByName converts a slice of validator.ValidationErrors into an Errors map.
+// formatErrorsByName converts validator.ValidationErrors into a Resp map.
 //
-// It iterates over validation errors, generates a user-friendly message
-// for each error using getErrorMessageForTag, and maps it by the field name.
+// It iterates over validation errors, maps each struct field name to a
+// user-friendly error message produced by getErrorForTag, and skips
+// any errors for which getErrorForTag returns nil.
 //
-// The resulting map uses field names as keys and corresponding error messages as values.
+// The resulting map uses field names as keys and error messages as values.
 func formatErrorsByName(ve validator.ValidationErrors) Resp {
 	errors := make(Resp)
 
 	for _, fe := range ve {
-		message := getErrorMessageForTag(fe)
-
 		name := fe.Field()
-		errors[name] = message
+
+		err := getErrorForTag(fe)
+		if err == nil {
+			continue
+		}
+
+		errors[name] = err.Error()
 	}
 
 	return errors

@@ -6,37 +6,37 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// getErrorMessageForTag returns a user-friendly error message for a validation error.
+// getErrorForTag returns a user-friendly error for a validation failure.
 //
-// It attempts to resolve the error message by delegating to specific
-// handlers based on the validation tag (e.g., required, string, number, date).
-// The first non-empty message returned by these handlers is used.
+// It attempts to resolve the error by delegating to specific handlers
+// based on the validation tag (e.g., required, string, number, datetime).
+// The first non-nil error returned by these handlers is used.
 //
-// If no specific handler matches, getErrorMessageForTag returns a default
-// formatted message containing the validation tag and field name.
-func getErrorMessageForTag(fe validator.FieldError) string {
-	message := getErrorMessageForRequiredTag(fe)
-	if message != "" {
-		return message
+// If no handler matches the tag, it returns a default error message
+// containing the validation tag and field name.
+func getErrorForTag(fe validator.FieldError) error {
+	err := getErrorForRequiredTag(fe)
+	if err != nil {
+		return err
 	}
 
-	message = getErrorMessageForStringTag(fe)
-	if message != "" {
-		return message
+	err = getErrorForStringTag(fe)
+	if err != nil {
+		return err
 	}
 
-	message = getErrorMessageForNumberTag(fe)
-	if message != "" {
-		return message
+	err = getErrorForNumberTag(fe)
+	if err != nil {
+		return err
 	}
 
-	message = getErrorMessageForDatetimeTag(fe)
-	if message != "" {
-		return message
+	err = getErrorForDatetimeTag(fe)
+	if err != nil {
+		return err
 	}
 
-	return fmt.Sprintf(
-		"Validation failed for the '%s' rule on field '%s'",
+	return fmt.Errorf(
+		"validation failed for the '%s' rule on field '%s'",
 		fe.Tag(),
 		fe.Field(),
 	)

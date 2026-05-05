@@ -6,11 +6,10 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// getErrorMessageForNumberTag returns a user-friendly error message
-// for numeric validation errors.
+// getErrorForNumberTag returns a user-friendly error for numeric validation failures.
 //
 // It inspects the validation tag from the provided validator.FieldError
-// and maps it to a corresponding message.
+// and maps it to a corresponding error value.
 //
 // Supported tags:
 //   - "min": the field must be greater than or equal to the specified value
@@ -18,30 +17,44 @@ import (
 //   - "gt":  the field must be greater than the specified value
 //   - "gte": the field must be greater than or equal to the specified value
 //
-// If the validation tag is not recognized, getErrorMessageForNumberTag returns an empty string.
-func getErrorMessageForNumberTag(fe validator.FieldError) string {
+// If the validation tag is not recognized, it returns nil.
+func getErrorForNumberTag(fe validator.FieldError) error {
 	switch fe.Tag() {
 	case "min":
-		return fmt.Sprintf(
-			"The field must be greater than or equal to %s",
-			fe.Param(),
-		)
+		return ErrMin(fe.Param())
 	case "max":
-		return fmt.Sprintf(
-			"The field must be less than or equal to %s",
-			fe.Param(),
-		)
+		return ErrMax(fe.Param())
 	case "gt":
-		return fmt.Sprintf(
-			"The field must be greater than %s",
-			fe.Param(),
-		)
+		return ErrGt(fe.Param())
 	case "gte":
-		return fmt.Sprintf(
-			"The field must be greater than or equal to %s",
-			fe.Param(),
-		)
+		return ErrGte(fe.Param())
 	}
 
-	return ""
+	return nil
+}
+
+var ErrMin = ErrGte
+
+func ErrMax(value string) error {
+	return fmt.Errorf(
+		"%s less than or equal to %s",
+		ValidationPrefix,
+		value,
+	)
+}
+
+func ErrGt(value string) error {
+	return fmt.Errorf(
+		"%s greater than %s",
+		ValidationPrefix,
+		value,
+	)
+}
+
+func ErrGte(value string) error {
+	return fmt.Errorf(
+		"%s greater than or equal to %s",
+		ValidationPrefix,
+		value,
+	)
 }
