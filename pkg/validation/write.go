@@ -30,7 +30,7 @@ func WriteErrors(ctx context.Context, w http.ResponseWriter, ve validator.Valida
 	log := logger.FromContext(ctx)
 	resp := formatErrorsByName(ve)
 
-	if err := httputil.WriteJSON(ctx, w, http.StatusBadRequest, resp); err != nil {
-		log.Error(ctx, "write response", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusBadRequest, resp); err != nil {
+		log.Error("write response", zap.Error(err))
 	}
 }

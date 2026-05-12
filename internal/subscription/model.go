@@ -25,9 +25,9 @@ type subSum struct {
 type subList struct {
 	serviceName string
 	userID      string
-	page        int
-	limit       int
-	offset      int
+	page        uint64
+	limit       uint64
+	offset      uint64
 }
 
 // updateSub represents subscription update domain model.

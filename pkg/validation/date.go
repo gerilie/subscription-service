@@ -6,20 +6,28 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var ErrDatetime = fmt.Errorf("%s in the format 'MM-YYYY'", ValidationPrefix)
+// ErrDatetime indicates that a field value
+// does not match the required date format.
+var ErrDatetime = fmt.Errorf(
+	"%w: must be in the format MM-YYYY",
+	ErrValidation,
+)
 
-// getErrorForDatetimeTag maps a validation error to a user-friendly error.
+// ErrDateOrder indicates that a start date is after the end date.
+var ErrDateOrder = fmt.Errorf(
+	"%w: start date must be before end date",
+	ErrValidation,
+)
+
+// getErrorForDatetimeTag maps validator datetime-related tags
+// to user-friendly validation errors.
 //
-// It inspects the validation tag from the provided validator.FieldError
-// and returns a corresponding error value.
+// Supported validator tags:
+//   - "datetime": field value must match the "MM-YYYY" format
 //
-// Supported tags:
-//   - "datetime": the field must match the "MM-YYYY" format.
-//
-// If the validation tag is not recognized, it returns nil.
+// Returns nil if the validation tag is unsupported.
 func getErrorForDatetimeTag(fe validator.FieldError) error {
-	switch fe.Tag() {
-	case "datetime":
+	if fe.Tag() == "datetime" {
 		return ErrDatetime
 	}
 

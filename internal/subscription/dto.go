@@ -42,7 +42,7 @@ type (
 		ServiceName string
 		UserID      string `validate:"omitempty,uuid4"`
 		Page        int    `validate:"required,gte=1"`
-		Limit       int    `validate:"required,min=1,max=100"`
+		Limit       int    `validate:"required,min=10,max=100"`
 	}
 	// SubListResp represents subscription list response payload.
 	SubListResp []SubResp

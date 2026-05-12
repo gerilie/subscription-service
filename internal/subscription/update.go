@@ -32,13 +32,13 @@ func (s *server) update(w http.ResponseWriter, r *http.Request) {
 
 	var req UpdateSubReq
 	if err := httputil.DecodeJSON(ctx, w, r, &req); err != nil {
-		log.Error(ctx, "decode json", zap.Error(err))
+		log.Error("decode json", zap.Error(err))
 
 		return
 	}
 
 	if err := s.validate.StructCtx(ctx, req); err != nil {
-		log.Error(ctx, "validate update subscription", zap.Error(err))
+		log.Error("validate update subscription", zap.Error(err))
 		handleValidationErrors(ctx, w, err)
 
 		return
@@ -51,13 +51,13 @@ func (s *server) update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := httputil.WriteJSON(ctx, w, http.StatusOK, resp); err != nil {
-		log.Error(ctx, "write json", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusOK, resp); err != nil {
+		log.Error("write json", zap.Error(err))
 
 		return
 	}
 
-	log.Info(ctx, "subscription updated", zap.String("id", id))
+	log.Info("subscription updated", zap.String("id", id))
 }
 
 func (s *service) update(ctx context.Context, id string, dto UpdateSubReq) (SubResp, error) {
@@ -128,7 +128,7 @@ func (r *pgRepository) update(ctx context.Context, id string, model updateSub) (
 		sub.endDate = &endDate.Time
 	}
 
-	log.Info(ctx, "query executed", zap.String("query", sqlStr), zap.Any("args", args))
+	log.Info("query executed", zap.String("query", sqlStr), zap.Any("args", args))
 
 	return sub, nil
 }

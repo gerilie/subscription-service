@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/yushafro/effective-mobile-tz/pkg/env"
@@ -10,13 +9,10 @@ import (
 
 // Logger defines a structured logging interface.
 type Logger interface {
-	Debug(ctx context.Context, msg string, fields ...zap.Field)
-	Info(ctx context.Context, msg string, fields ...zap.Field)
-	Warn(ctx context.Context, msg string, fields ...zap.Field)
-	Error(ctx context.Context, msg string, fields ...zap.Field)
-
-	// With returns a new Logger with additional structured fields.
-	With(fields ...zap.Field) Logger
+	Debug(msg string, fields ...zap.Field)
+	Info(msg string, fields ...zap.Field)
+	Warn(msg string, fields ...zap.Field)
+	Error(msg string, fields ...zap.Field)
 
 	// Zap returns the underlying zap.Logger instance.
 	Zap() *zap.Logger

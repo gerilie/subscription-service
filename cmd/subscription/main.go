@@ -1,3 +1,4 @@
+// Package main provides the entry point for the subscription service.
 package main
 
 import (
@@ -63,9 +64,9 @@ func main() {
 	shCh := make(chan os.Signal, 1)
 	signal.Notify(shCh, os.Interrupt, syscall.SIGINT)
 	<-shCh
-	log.Info(ctx, "shutdown signal received")
+	log.Info("shutdown signal received")
 
 	close(shSrvCh)
 	wg.Wait()
-	log.Info(ctx, "servers stopped")
+	log.Info("servers stopped")
 }

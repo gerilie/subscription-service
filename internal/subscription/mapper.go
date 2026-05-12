@@ -27,7 +27,7 @@ func subToModel(ctx context.Context, dto SubReq) (sub, error) {
 		endDate = &parsed
 	}
 
-	log.Info(ctx, "subscription mapped to domain")
+	log.Info("subscription mapped to domain")
 
 	return sub{
 		serviceName: dto.ServiceName,
@@ -48,7 +48,7 @@ func subToDTO(ctx context.Context, sub sub) (SubResp, error) {
 		endDate = &parsed
 	}
 
-	log.Info(ctx, "subscription mapped to dto")
+	log.Info("subscription mapped to dto")
 
 	return SubResp{
 		ID:          sub.id,
@@ -64,15 +64,36 @@ func subToDTO(ctx context.Context, sub sub) (SubResp, error) {
 func subListToModel(ctx context.Context, dto SubListReq) subList {
 	log := logger.FromContext(ctx)
 
-	log.Info(ctx, "subscription list mapped to model")
-
-	return subList{
+	model := subList{
 		serviceName: dto.ServiceName,
 		userID:      dto.UserID,
-		page:        dto.Page,
-		limit:       dto.Limit,
-		offset:      (dto.Page - 1) * dto.Limit,
 	}
+
+	const (
+		minPage  = 1
+		minLimit = 10
+		maxLimit = 100
+	)
+
+	switch {
+	case dto.Page < minPage:
+		model.page = minPage
+	default:
+		model.page = uint64(dto.Page)
+	}
+
+	switch {
+	case dto.Limit < minLimit:
+		model.limit = minLimit
+	case dto.Limit > maxLimit:
+		model.limit = maxLimit
+	default:
+		model.limit = uint64(dto.Limit)
+	}
+
+	log.Info("subscription list mapped to model")
+
+	return model
 }
 
 // subListToDTO converts domain model to SubListResp DTO.
@@ -89,7 +110,7 @@ func subListToDTO(ctx context.Context, subs []sub) (SubListResp, error) {
 		subListResp = append(subListResp, subResp)
 	}
 
-	log.Info(ctx, "subscription list mapped to DTO")
+	log.Info("subscription list mapped to DTO")
 
 	return subListResp, nil
 }
@@ -108,7 +129,7 @@ func subSumToModel(ctx context.Context, dto SubSumReq) (subSum, error) {
 		return subSum{}, fmt.Errorf("invalid format %s: %w", dto.EndDate, err)
 	}
 
-	log.Info(ctx, "subscription summa mapped to model")
+	log.Info("subscription summa mapped to model")
 
 	return subSum{
 		serviceName: dto.ServiceName,
@@ -123,7 +144,7 @@ func subSumToModel(ctx context.Context, dto SubSumReq) (subSum, error) {
 func subSumToDTO(ctx context.Context, sum subSum) SubSumResp {
 	log := logger.FromContext(ctx)
 
-	log.Info(ctx, "subscription summa mapped to dto")
+	log.Info("subscription summa mapped to dto")
 
 	return SubSumResp{
 		TotalPrice: sum.totalPrice,
@@ -159,7 +180,7 @@ func updateSubToModel(ctx context.Context, dto UpdateSubReq) (updateSub, error) 
 		model.endDate = &endDate
 	}
 
-	log.Info(ctx, "updating subscription mapped to model")
+	log.Info("updating subscription mapped to model")
 
 	return model, nil
 }

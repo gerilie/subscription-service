@@ -9,13 +9,15 @@ import (
 	"go.uber.org/zap"
 )
 
-// @Summary	Ping service
-// @Tags		health
-// @ID			ping
-// @Produce	json
-// @Success	200	{object}	pingResp	"Ping success"
-// @Failure	500	{string}	string		"Internal server error"
-// @Router		/ping [get].
+// Ping is a simple health check endpoint that returns a timestamp.
+//
+//	@Summary	Ping service
+//	@Tags		health
+//	@ID			ping
+//	@Produce	json
+//	@Success	200	{object}	pingResp	"Ping success"
+//	@Failure	500	{string}	string		"Internal server error"
+//	@Router		/ping [get].
 func Ping(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.FromContext(ctx)
@@ -24,11 +26,11 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 		Timestamp: time.Now().String(),
 	}
 
-	if err := httputil.WriteJSON(ctx, w, http.StatusOK, resp); err != nil {
-		log.Error(ctx, "ping failed", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusOK, resp); err != nil {
+		log.Error("ping failed", zap.Error(err))
 
 		return
 	}
 
-	log.Info(ctx, "ping success")
+	log.Info("ping success")
 }

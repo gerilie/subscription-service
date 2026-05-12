@@ -1,6 +1,8 @@
 package env
 
 const (
-	Dev  = "dev"
+	// Dev is a development environment identifier.
+	Dev = "dev"
+	// Prod is a production environment identifier.
 	Prod = "prod"
 )

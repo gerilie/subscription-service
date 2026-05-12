@@ -1,0 +1,104 @@
+version: "2"
+linters:
+  default: standard
+  enable:
+    - bodyclose
+    - sqlclosecheck
+    - canonicalheader
+    - copyloopvar
+    - cyclop
+    - decorder
+    # - depguard
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - embeddedstructfieldcheck
+    - err113
+    - errchkjson
+    - errname
+    - errorlint
+    - exptostd
+    - forcetypeassert
+    - funcorder
+    - funlen
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - grouper
+    - iface
+    - importas
+    - inamedparam
+    - interfacebloat
+    - intrange
+    - lll
+    - loggercheck
+    - makezero
+    - mirror
+    - misspell
+    - mnd
+    - musttag
+    - nestif
+    - nilerr
+    - nilnil
+    - nlreturn
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - predeclared
+    - protogetter
+    - recvcheck
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - tagalign
+    - testifylint
+    - testpackage
+    - thelper
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - usetesting
+    - revive
+    - staticcheck
+    # - varnamelen
+    - wastedassign
+    - whitespace
+    # - wrapcheck
+  exclusions:
+    rules:
+      - path: "(.+)_test\\.go"
+        linters:
+          - funlen
+    paths:
+      - docs/*.go
+  settings:
+    errcheck:
+      exclude-functions:
+        - (*go.uber.org/zap.Logger).Sync
+        - (*os.File).Close
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+    - swaggo
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  fix: true
+  uniq-by-line: true

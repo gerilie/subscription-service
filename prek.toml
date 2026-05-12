@@ -1,0 +1,81 @@
+default_install_hook_types = ["pre-commit", "commit-msg", "pre-push"]
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [
+  { id = "trailing-whitespace" },
+  { id = "end-of-file-fixer" },
+  { id = "mixed-line-ending" },
+  { id = "check-merge-conflict" },
+  { id = "check-case-conflict" },
+  { id = "check-symlinks" },
+  { id = "detect-private-key" },
+  { id = "check-added-large-files", args = ["--maxkb=1024"] },
+  { id = "check-illegal-windows-names" },
+  { id = "check-yaml" },
+  { id = "check-json" },
+  { id = "check-toml" },
+  { id = "pretty-format-json", args = ["--autofix"] },
+  # { id = "no-commit-to-branch", args = ["--branch", "main"] },
+]
+
+[[repos]]
+repo = "https://github.com/tekwizely/pre-commit-golang"
+rev = "v1.0.0-rc.4"
+hooks = [
+  { id = "go-mod-tidy" },
+  { id = "go-build-mod" },
+  { id = "go-vet-mod" },
+  { id = "golangci-lint-mod" },
+  { id = "go-vulncheck-mod" },
+  {
+    id = "go-test-mod",
+    stages = [
+      "pre-push",
+    ]
+  },
+]
+
+[[repos]]
+repo = "https://github.com/google/yamlfmt"
+rev = "v0.21.0"
+hooks = [{ id = "yamlfmt" }]
+
+[[repos]]
+repo = "https://github.com/crate-ci/typos"
+rev = "v1.46.1"
+hooks = [{ id = "typos", exclude = "^go\\.mod$" }]
+
+[[repos]]
+repo = "https://github.com/gitleaks/gitleaks"
+rev = "v8.30.1"
+hooks = [{ id = "gitleaks" }]
+
+[[repos]]
+repo = "https://github.com/commitizen-tools/commitizen"
+rev = "v4.16.0"
+hooks = [
+  { id = "commitizen" },
+  {
+    id = "commitizen-branch",
+    stages = [
+      "pre-push",
+    ]
+  },
+]
+
+[[repos]]
+repo = "https://github.com/checkmake/checkmake.git"
+rev = "v0.3.2"
+hooks = [{ id = "checkmake" }]
+
+[[repos]]
+repo = "https://github.com/sqlfluff/sqlfluff"
+rev = "4.1.0"
+hooks = [{ id = "sqlfluff-lint" }]
+
+[[repos]]
+repo = "https://github.com/bufbuild/buf"
+rev = "v1.69.0"
+hooks = [{ id = "buf-lint" }, { id = "buf-breaking" }]

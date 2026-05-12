@@ -42,7 +42,7 @@ func DecodeJSON[T any](ctx context.Context, w http.ResponseWriter, r *http.Reque
 }
 
 // WriteJSON encodes v to JSON and writes it to the response with given status code.
-func WriteJSON(ctx context.Context, w http.ResponseWriter, status int, v any) error {
+func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	data, err := json.Marshal(v)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)

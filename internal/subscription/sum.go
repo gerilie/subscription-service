@@ -37,7 +37,7 @@ func (s *server) sum(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := s.validate.StructCtx(ctx, req); err != nil {
-		log.Error(ctx, "validate subscription summa", zap.Error(err))
+		log.Error("validate subscription summa", zap.Error(err))
 		handleValidationErrors(ctx, w, err)
 
 		return
@@ -50,14 +50,13 @@ func (s *server) sum(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := httputil.WriteJSON(ctx, w, http.StatusOK, resp); err != nil {
-		log.Error(ctx, "write json", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusOK, resp); err != nil {
+		log.Error("write json", zap.Error(err))
 
 		return
 	}
 
 	log.Info(
-		ctx,
 		"subscription summa retrieved",
 		zap.String("start_date", req.StartDate),
 		zap.String("end_date", req.EndDate),
@@ -125,7 +124,7 @@ func (r *pgRepository) sum(ctx context.Context, model subSum) (subSum, error) {
 		return subSum{}, fmt.Errorf("read row: %w", err)
 	}
 
-	log.Info(ctx, "query executed", zap.String("query", sql), zap.Any("args", args))
+	log.Info("query executed", zap.String("query", sql), zap.Any("args", args))
 
 	return sum, nil
 }

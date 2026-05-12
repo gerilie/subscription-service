@@ -19,15 +19,15 @@ func HandleDefaultErrors(ctx context.Context, w http.ResponseWriter, err error) 
 
 	switch {
 	case errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded):
-		log.Warn(ctx, "request canceled", zap.Error(err))
+		log.Warn("request canceled", zap.Error(err))
 		http.Error(w, "request canceled", http.StatusGatewayTimeout)
 
 	case errors.Is(err, sql.ErrNoRows):
-		log.Warn(ctx, "resource not found", zap.Error(err))
+		log.Warn("resource not found", zap.Error(err))
 		http.Error(w, "resource not found", http.StatusNotFound)
 
 	case errors.As(err, &pgErr):
-		log.Error(ctx, "database error",
+		log.Error("database error",
 			zap.String("code", pgErr.Code),
 			zap.String("detail", pgErr.Detail),
 			zap.String("table", pgErr.TableName),
@@ -35,7 +35,7 @@ func HandleDefaultErrors(ctx context.Context, w http.ResponseWriter, err error) 
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 
 	default:
-		log.Error(ctx, "unexpected error", zap.Error(err))
+		log.Error("unexpected error", zap.Error(err))
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 	}
 }

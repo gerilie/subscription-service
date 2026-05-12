@@ -7,20 +7,27 @@ import (
 )
 
 var (
-	ErrEmail = fmt.Errorf("%s a valid email address", ValidationPrefix)
-	ErrUUID4 = fmt.Errorf("%s a valid UUID (version 4)", ValidationPrefix)
+	// ErrEmail indicates that a field value is not a valid email address.
+	ErrEmail = fmt.Errorf(
+		"%w: must be a valid email address",
+		ErrValidation,
+	)
+
+	// ErrUUID4 indicates that a field value is not a valid UUID (version 4).
+	ErrUUID4 = fmt.Errorf(
+		"%w: must be a valid UUID v4",
+		ErrValidation,
+	)
 )
 
-// getErrorForStringTag returns a user-friendly error for string-related validation failures.
+// getErrorForStringTag maps validator string-related tags
+// to user-friendly validation errors.
 //
-// It inspects the validation tag from the provided validator.FieldError
-// and maps it to a corresponding error value.
+// Supported validator tags:
+//   - "email":  field value must be a valid email address
+//   - "uuid4":  field value must be a valid UUID (version 4)
 //
-// Supported tags:
-//   - "email": the field must be a valid email address
-//   - "uuid4": the field must be a valid UUID (version 4)
-//
-// If the validation tag is not recognized, it returns nil.
+// Returns nil if the validation tag is unsupported.
 func getErrorForStringTag(fe validator.FieldError) error {
 	switch fe.Tag() {
 	case "email":

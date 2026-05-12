@@ -1,0 +1,14 @@
+[files]
+extend-exclude = [
+  "go.mod",
+  "go.sum",
+  "**/vendor/**",
+  "**/generated/**",
+  "**/docs/**",
+  "*.lock",
+  "*.sum",
+  "*.pb.go",
+  "air.toml",
+  "prek.toml",
+  ".golangci.yml",
+]

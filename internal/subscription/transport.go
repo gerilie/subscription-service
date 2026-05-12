@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	httpSwagger "github.com/swaggo/http-swagger"
-	_ "github.com/yushafro/effective-mobile-tz/docs"
 	"github.com/yushafro/effective-mobile-tz/pkg/logger"
 	"github.com/yushafro/effective-mobile-tz/pkg/middleware"
 	"github.com/yushafro/effective-mobile-tz/pkg/ping"
@@ -26,6 +25,12 @@ const (
 	pingPattern    = "GET /ping"
 )
 
+// Server defines a HTTP server for handling subscription requests.
+type Server interface {
+	Start() error
+	Stop(ctx context.Context) error
+}
+
 type server struct {
 	service  Service
 	server   *http.Server
@@ -35,7 +40,7 @@ type server struct {
 }
 
 // NewServer creates a new HTTP server for handling subscription requests.
-func NewServer(service Service, cfg Config, log logger.Logger) *server {
+func NewServer(service Service, cfg Config, log logger.Logger) Server {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	limiter := ratelimiter.NewIPRateLimiter(
 		rate.Limit(cfg.RLRequestsPerSecond),

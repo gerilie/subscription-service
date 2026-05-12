@@ -37,24 +37,24 @@ func initServer(ctx context.Context, s *server) {
 
 	go func() {
 		<-s.shSrvCh
-		log.Info(ctx, "server stopping")
+		log.Info("server stopping")
 
 		err := server.Stop(ctx)
 		if err != nil {
-			log.Error(ctx, "Error stopping server", zap.Error(err))
+			log.Error("Error stopping server", zap.Error(err))
 			s.errCh <- err
 
 			return
 		}
 
-		log.Info(ctx, "server stopped")
+		log.Info("server stopped")
 		s.wg.Done()
 	}()
 
-	log.Info(ctx, "server started")
+	log.Info("server started")
 	err = server.Start()
 	if !errors.Is(err, http.ErrServerClosed) {
-		log.Error(ctx, "Error starting server", zap.Error(err))
+		log.Error("Error starting server", zap.Error(err))
 		s.wg.Done()
 		s.errCh <- err
 

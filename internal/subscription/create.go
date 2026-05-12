@@ -27,13 +27,13 @@ func (s *server) create(w http.ResponseWriter, r *http.Request) {
 
 	var req SubReq
 	if err := httputil.DecodeJSON(ctx, w, r, &req); err != nil {
-		log.Error(ctx, "decode json", zap.Error(err))
+		log.Error("decode json", zap.Error(err))
 
 		return
 	}
 
 	if err := s.validate.StructCtx(ctx, req); err != nil {
-		log.Error(ctx, "validate subscription", zap.Error(err))
+		log.Error("validate subscription", zap.Error(err))
 		handleValidationErrors(ctx, w, err)
 
 		return
@@ -47,13 +47,13 @@ func (s *server) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Location", fmt.Sprint("/subscriptions/", resp.ID))
-	if err := httputil.WriteJSON(ctx, w, http.StatusCreated, resp); err != nil {
-		log.Error(ctx, "write response", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusCreated, resp); err != nil {
+		log.Error("write response", zap.Error(err))
 
 		return
 	}
 
-	log.Info(ctx, "subscription created")
+	log.Info("subscription created")
 }
 
 func (s *service) create(ctx context.Context, dto SubReq) (SubResp, error) {
@@ -89,7 +89,7 @@ func (r *pgRepository) create(ctx context.Context, model sub) (sub, error) {
 	if err := row.Scan(&model.id); err != nil {
 		return sub{}, fmt.Errorf("read row: %w", err)
 	}
-	log.Info(ctx, "query executed", zap.String("query", sql), zap.Any("args", args))
+	log.Info("query executed", zap.String("query", sql), zap.Any("args", args))
 
 	return model, nil
 }

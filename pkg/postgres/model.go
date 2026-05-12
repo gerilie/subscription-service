@@ -37,7 +37,7 @@ func New(ctx context.Context, cfg Config) (*pgxpool.Pool, error) {
 		return nil, fmt.Errorf("connection failed: %w", err)
 	}
 
-	log.Info(ctx, "connected to database")
+	log.Info("connected to database")
 
 	return pool, nil
 }

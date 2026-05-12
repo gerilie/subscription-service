@@ -1,7 +1,16 @@
 package validation
 
-// Resp represents a map of field names to their corresponding validation error messages.
+import "errors"
+
+// Resp maps field names to user-friendly validation error messages.
+//
+// Example:
+//
+//	{
+//		"email": "must be a valid email address",
+//		"age":   "must be greater than or equal to 18",
+//	}
 type Resp map[string]string
 
-// ValidationPrefix is a constant string used as a prefix for validation error messages.
-const ValidationPrefix = "the field must be"
+// ErrValidation is the base error for all validation failures.
+var ErrValidation = errors.New("validation failed")

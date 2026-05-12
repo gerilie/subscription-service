@@ -36,7 +36,7 @@ func (s *server) list(w http.ResponseWriter, r *http.Request) {
 
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		log.Error(ctx, "bad request", zap.Error(err))
+		log.Error("bad request", zap.Error(err))
 		http.Error(w, "bad request: invalid page", http.StatusBadRequest)
 
 		return
@@ -44,7 +44,7 @@ func (s *server) list(w http.ResponseWriter, r *http.Request) {
 
 	limit, err := strconv.Atoi(query.Get("limit"))
 	if err != nil {
-		log.Error(ctx, "bad request", zap.Error(err))
+		log.Error("bad request", zap.Error(err))
 		http.Error(w, "bad request: invalid limit", http.StatusBadRequest)
 
 		return
@@ -58,7 +58,7 @@ func (s *server) list(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := s.validate.StructCtx(ctx, req); err != nil {
-		log.Error(ctx, "validate subscription list", zap.Error(err))
+		log.Error("validate subscription list", zap.Error(err))
 		handleValidationErrors(ctx, w, err)
 
 		return
@@ -71,14 +71,13 @@ func (s *server) list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := httputil.WriteJSON(ctx, w, http.StatusOK, resp); err != nil {
-		log.Error(ctx, "write json", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusOK, resp); err != nil {
+		log.Error("write json", zap.Error(err))
 
 		return
 	}
 
 	log.Info(
-		ctx,
 		"subscriptions listed",
 		zap.Int("page", page),
 		zap.Int("limit", limit),
@@ -101,8 +100,8 @@ func (r *pgRepository) list(ctx context.Context, model subList) ([]sub, error) {
 
 	qb := r.builder.Select("id, service_name, price, user_id, start_date, end_date").
 		From("subscriptions").
-		Limit(uint64(model.limit)).
-		Offset(uint64(model.offset)).
+		Limit(model.limit).
+		Offset(model.offset).
 		OrderBy("id")
 
 	if model.serviceName != "" {
@@ -148,7 +147,7 @@ func (r *pgRepository) list(ctx context.Context, model subList) ([]sub, error) {
 		subs = append(subs, sub)
 	}
 
-	log.Info(ctx, "query executed", zap.String("query", sqlStr), zap.Any("args", args))
+	log.Info("query executed", zap.String("query", sqlStr), zap.Any("args", args))
 
 	return subs, nil
 }

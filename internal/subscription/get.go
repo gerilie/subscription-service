@@ -35,13 +35,13 @@ func (s *server) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := httputil.WriteJSON(ctx, w, http.StatusOK, resp); err != nil {
-		log.Error(ctx, "write json", zap.Error(err))
+	if err := httputil.WriteJSON(w, http.StatusOK, resp); err != nil {
+		log.Error("write json", zap.Error(err))
 
 		return
 	}
 
-	log.Info(ctx, "subscription retrieved", zap.String("id", id))
+	log.Info("subscription retrieved", zap.String("id", id))
 }
 
 func (s *service) get(ctx context.Context, id string) (SubResp, error) {
@@ -86,7 +86,7 @@ func (r *pgRepository) get(ctx context.Context, id string) (sub, error) {
 		sub.endDate = &endDate.Time
 	}
 
-	log.Info(ctx, "query executed", zap.String("query", sqlStr), zap.Any("args", args))
+	log.Info("query executed", zap.String("query", sqlStr), zap.Any("args", args))
 
 	return sub, nil
 }

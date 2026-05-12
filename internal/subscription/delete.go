@@ -33,7 +33,7 @@ func (s *server) delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-	log.Info(ctx, "subscription deleted", zap.String("id", id))
+	log.Info("subscription deleted", zap.String("id", id))
 }
 
 func (s *service) delete(ctx context.Context, id string) error {
@@ -56,7 +56,7 @@ func (r *pgRepository) delete(ctx context.Context, id string) error {
 		return fmt.Errorf("read row: %w", err)
 	}
 
-	log.Info(ctx, "query executed", zap.String("query", sql), zap.Any("args", args))
+	log.Info("query executed", zap.String("query", sql), zap.Any("args", args))
 
 	return nil
 }

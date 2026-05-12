@@ -23,7 +23,7 @@ type pgRepository struct {
 }
 
 // NewPGRepository creates PostgreSQL implementation of Repository.
-func NewPGRepository(db *pgxpool.Pool) *pgRepository {
+func NewPGRepository(db *pgxpool.Pool) Repository {
 	builder := squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
 
 	return &pgRepository{

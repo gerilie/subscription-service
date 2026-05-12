@@ -8,6 +8,7 @@ import (
 
 type contextKey struct{}
 
+//nolint:gochecknoglobals
 var loggerKey = contextKey{}
 
 // WithLogger returns a new context containing the provided Logger.
@@ -23,7 +24,9 @@ func WithRequestID(ctx context.Context, id string) context.Context {
 		return ctx
 	}
 
-	l = l.With(zap.String("request_id", id))
+	l = &logger{
+		l: l.Zap().With(zap.String("request_id", id)),
+	}
 
 	return WithLogger(ctx, l)
 }

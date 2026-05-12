@@ -22,7 +22,7 @@ func Logging(next http.Handler, log logger.Logger) http.Handler {
 
 		id := r.Header.Get(httputil.RequestID)
 		if id == "" {
-			log.Info(ctx, "empty request id, creating new one")
+			log.Info("empty request id, creating new one")
 			id = uuid.NewString()
 		}
 

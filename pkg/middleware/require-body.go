@@ -16,7 +16,7 @@ func RequireBody(next http.Handler) http.Handler {
 		log := logger.FromContext(ctx)
 
 		if r.ContentLength == 0 {
-			log.Error(ctx, "Empty request body error")
+			log.Error("Empty request body error")
 			http.Error(w, "request body is empty", http.StatusBadRequest)
 
 			return

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"strconv"
 
 	"github.com/yushafro/effective-mobile-tz/pkg/httputil"
 	"github.com/yushafro/effective-mobile-tz/pkg/logger"
@@ -21,7 +22,7 @@ func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 
 		ip := httputil.GetClientIP(r)
 		if ip == "" {
-			log.Error(ctx, "get client ip")
+			log.Error("get client ip")
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 
 			return
@@ -29,21 +30,21 @@ func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 
 		limiter := l.GetLimiter(ip)
 		if limiter == nil {
-			log.Error(ctx, "get limiter")
+			log.Error("get limiter")
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 
 			return
 		}
 
-		limit := fmt.Sprintf("%d", limiter.Burst())
+		limit := strconv.Itoa(limiter.Burst())
 		tokens := limiter.Tokens()
 		remaining := fmt.Sprintf("%.0f", math.Floor(tokens))
 
-		w.Header().Set("X-RateLimit-Limit", limit)
-		w.Header().Set("X-RateLimit-Remaining", remaining)
+		w.Header().Set("X-Ratelimit-Limit", limit)
+		w.Header().Set("X-Ratelimit-Remaining", remaining)
 
 		if !limiter.Allow() {
-			log.Error(ctx, "too many requests")
+			log.Error("too many requests")
 			http.Error(w, "too many requests", http.StatusTooManyRequests)
 
 			return

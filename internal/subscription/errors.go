@@ -3,7 +3,6 @@ package subscription
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -20,14 +19,14 @@ func handleServiceErrors(ctx context.Context, w http.ResponseWriter, err error) 
 	log := logger.FromContext(ctx)
 
 	if errors.Is(err, errDateOrder) {
-		log.Error(ctx, "validate subscription", zap.Error(err))
+		log.Error("validate subscription", zap.Error(err))
 
 		resp := validation.Resp{
-			"start_date": fmt.Sprintf("%s before end date", validation.ValidationPrefix),
+			"start_date": validation.ErrDateOrder.Error(),
 		}
 
-		if err := httputil.WriteJSON(ctx, w, http.StatusBadRequest, resp); err != nil {
-			log.Error(ctx, "write response", zap.Error(err))
+		if err := httputil.WriteJSON(w, http.StatusBadRequest, resp); err != nil {
+			log.Error("write response", zap.Error(err))
 		}
 
 		return
@@ -38,9 +37,12 @@ func handleServiceErrors(ctx context.Context, w http.ResponseWriter, err error) 
 
 // handleValidationErrors processes validation errors and writes HTTP response.
 func handleValidationErrors(ctx context.Context, w http.ResponseWriter, err error) {
-	if err, ok := err.(validator.ValidationErrors); ok {
-		validation.WriteErrors(ctx, w, err)
-	} else {
-		http.Error(w, "validation failed", http.StatusBadRequest)
+	var ve validator.ValidationErrors
+	if errors.As(err, &ve) {
+		validation.WriteErrors(ctx, w, ve)
+
+		return
 	}
+
+	http.Error(w, "internal server error", http.StatusInternalServerError)
 }
