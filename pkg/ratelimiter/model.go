@@ -19,9 +19,6 @@ type IPRateLimiter interface {
 	// GetLimiter returns a rate limiter associated with the given IP address.
 	// If the IP is empty, a new independent limiter is created.
 	GetLimiter(ip string) *rate.Limiter
-
-	// GetIPCount returns the number of tracked IPs in the limiter.
-	GetIPCount() int
 }
 
 // rateLimiter contains shared configuration for rate limiting.
@@ -94,12 +91,4 @@ func (l *ipRateLimiter) CleanUp() {
 	defer l.mu.Unlock()
 
 	l.ips = make(map[string]*rate.Limiter)
-}
-
-// GetIPCount returns the number of IP addresses currently tracked by the limiter.
-func (l *ipRateLimiter) GetIPCount() int {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
-
-	return len(l.ips)
 }
