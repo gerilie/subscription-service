@@ -69,18 +69,18 @@ func (l *ipRateLimiter) GetLimiter(ip string) *rate.Limiter {
 	}
 
 	l.mu.RLock()
-	limiter, ok := l.ips[ip]
+	limiter := l.ips[ip]
 	l.mu.RUnlock()
 
-	if ok {
+	if limiter != nil {
 		return limiter
 	}
 
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	limiter, ok = l.ips[ip]
-	if !ok {
+	limiter = l.ips[ip]
+	if limiter == nil {
 		limiter = rate.NewLimiter(l.r, l.b)
 		l.ips[ip] = limiter
 	}
