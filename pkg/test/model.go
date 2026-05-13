@@ -4,11 +4,11 @@ package test
 //
 // A is the type of input arguments.
 // W is the type of the expected result.
-type Expected[A, W any] struct {
-	Name  string
-	Args  A
-	Want  W
-	Error error
+type Expected[A, E any] struct {
+	Name     string
+	Args     A
+	Expected E
+	Error    error
 }
 
 // NoExpected represents a generic test case with input arguments
