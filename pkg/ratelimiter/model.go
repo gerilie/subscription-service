@@ -1,6 +1,7 @@
 package ratelimiter
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -22,7 +23,7 @@ type IPRateLimiter interface {
 
 	// StartCleanUp starts a background cleanup routine that periodically removes
 	// inactive IP limiters from internal storage using the configured cleanup settings.
-	StartCleanUp()
+	StartCleanUp(ctx context.Context)
 }
 
 // client stores a rate limiter and metadata associated with a single IP address.
@@ -51,7 +52,8 @@ type Config struct {
 type ipRateLimiter struct {
 	Config
 
-	mu  *sync.Mutex
+	mu *sync.Mutex
+
 	ips map[string]*client
 }
 

@@ -1,6 +1,9 @@
 package ratelimiter
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // StartCleanUp starts a background cleanup routine that periodically removes
 // inactive IP limiters from internal storage.
@@ -10,12 +13,19 @@ import "time"
 //   - cleanUpInterval defines how often cleanup runs.
 //   - cleanUpMaxIdle defines how long a limiter may remain inactive
 //     before removal.
-func (l *ipRateLimiter) StartCleanUp() {
+func (l *ipRateLimiter) StartCleanUp(ctx context.Context) {
 	ticker := time.NewTicker(l.CleanUpInterval)
 
 	go func() {
-		for range ticker.C {
-			l.cleanUp(l.CleanUpMaxIdle)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				l.cleanUp(l.CleanUpMaxIdle)
+			case <-ctx.Done():
+				return
+			}
 		}
 	}()
 }
