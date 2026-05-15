@@ -17,7 +17,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestWriteErrors(t *testing.T) {
+func Test_WriteErrors(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
