@@ -10,24 +10,31 @@ import (
 //
 // Cleanup behavior is configured through the limiter Config:
 //
-//   - cleanUpInterval defines how often cleanup runs.
-//   - cleanUpMaxIdle defines how long a limiter may remain inactive
+//   - CleanUpInterval defines how often cleanup runs.
+//   - CleanUpMaxIdle defines how long a limiter may remain inactive
 //     before removal.
+//
+// The cleanup routine runs until the provided context is canceled.
+//
+// Multiple calls to StartCleanUp are safe, but the cleanup routine
+// will only be started once.
 func (l *ipRateLimiter) StartCleanUp(ctx context.Context) {
-	ticker := time.NewTicker(l.CleanUpInterval)
+	l.cleanUpOnce.Do(func() {
+		ticker := time.NewTicker(l.CleanUpInterval)
 
-	go func() {
-		defer ticker.Stop()
+		go func() {
+			defer ticker.Stop()
 
-		for {
-			select {
-			case <-ticker.C:
-				l.cleanUp(l.CleanUpMaxIdle)
-			case <-ctx.Done():
-				return
+			for {
+				select {
+				case <-ticker.C:
+					l.cleanUp(l.CleanUpMaxIdle)
+				case <-ctx.Done():
+					return
+				}
 			}
-		}
-	}()
+		}()
+	})
 }
 
 // cleanUp removes IP limiters that have been inactive longer than maxIdle.

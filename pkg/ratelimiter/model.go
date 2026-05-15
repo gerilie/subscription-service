@@ -52,7 +52,8 @@ type Config struct {
 type ipRateLimiter struct {
 	Config
 
-	mu *sync.Mutex
+	mu          *sync.Mutex
+	cleanUpOnce sync.Once
 
 	ips map[string]*client
 }
