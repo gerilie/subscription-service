@@ -16,11 +16,10 @@ services:
       GOOSE_DRIVER: postgres
       GOOSE_DBSTRING: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       GOOSE_MIGRATION_DIR: /app/migrations
-
   postgres:
-    image: postgres:latest
+    image: ${POSTGRES_IMAGE}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -31,6 +30,5 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql
-
 volumes:
   postgres_data:
