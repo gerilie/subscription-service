@@ -27,9 +27,9 @@ type logger struct {
 	l *zap.Logger
 }
 
-// NewWithConfig creates a new Logger based on provided Config and environment.
+// New creates a new Logger based on provided Config and environment.
 // Uses development config for dev environment and production config otherwise.
-func NewWithConfig(cfg Config, environment string) (Logger, error) {
+func New(cfg Config, environment string) (Logger, error) {
 	var config zap.Config
 	if environment == env.Dev {
 		config = zap.NewDevelopmentConfig()
