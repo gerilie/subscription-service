@@ -6,9 +6,11 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+//go:generate mockgen -source=pool-connector.go -destination=pool-connector_mock.go -package=postgres
+
 // PoolConnector defines the interface for PostgreSQL pool operations.
 //
-// It abstracts the creation and health checking of connection pools,
+// It abstracts the creation, health checking, and cleanup of connection pools,
 // enabling dependency injection for testing and alternative implementations.
 type PoolConnector interface {
 	// Connect creates a new connection pool from the given connection string.
@@ -22,6 +24,13 @@ type PoolConnector interface {
 	// It sends a lightweight check to the database and returns an error
 	// if the database cannot be reached within the context deadline.
 	Ping(ctx context.Context, pool *pgxpool.Pool) error
+
+	// Close releases all resources held by the connection pool.
+	//
+	// After Close is called, the pool is no longer usable. Any pending
+	// queries are terminated and all connections are returned to the
+	// underlying driver. Close is idempotent and safe to call multiple times.
+	Close(pool *pgxpool.Pool)
 }
 
 // poolConnector is the production implementation of PoolConnector.
@@ -56,4 +65,13 @@ func (c *poolConnector) Connect(ctx context.Context, connString string) (*pgxpoo
 // context deadline. This method is a thin wrapper around pgxpool.Pool.Ping.
 func (c *poolConnector) Ping(ctx context.Context, pool *pgxpool.Pool) error {
 	return pool.Ping(ctx)
+}
+
+// Close releases all resources held by the connection pool.
+//
+// It delegates directly to the pool's Close method, which closes all
+// connections in the pool and rejects any future requests. The pool
+// cannot be reused after this method is called.
+func (c *poolConnector) Close(pool *pgxpool.Pool) {
+	pool.Close()
 }
