@@ -9,6 +9,18 @@ import (
 	"github.com/yushafro/effective-mobile-tz/pkg/httputil"
 	"github.com/yushafro/effective-mobile-tz/pkg/logger"
 	"github.com/yushafro/effective-mobile-tz/pkg/ratelimiter"
+	"go.uber.org/zap"
+)
+
+var (
+	// ErrRateLimit indicates the client has exceeded their rate limit (HTTP 429).
+	ErrRateLimit = fmt.Errorf("%w: too many requests", ErrMiddleware)
+
+	// ErrGetClientIP indicates the client IP could not be determined (HTTP 500).
+	ErrGetClientIP = fmt.Errorf("%w: failed to get client ip", ErrMiddleware)
+
+	// ErrGetLimiter indicates the rate limiter could not be retrieved (HTTP 500).
+	ErrGetLimiter = fmt.Errorf("%w: failed to get limiter", ErrMiddleware)
 )
 
 // RateLimiter is a middleware function that applies rate limiting to HTTP requests.
@@ -22,16 +34,16 @@ func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 
 		ip := httputil.GetClientIP(r)
 		if ip == "" {
-			log.Error("get client ip")
-			http.Error(w, "internal server error", http.StatusInternalServerError)
+			log.Error("internal middleware error", zap.Error(ErrGetClientIP))
+			http.Error(w, httputil.InternalServerErrorMsg, http.StatusInternalServerError)
 
 			return
 		}
 
 		limiter := l.GetLimiter(ip)
 		if limiter == nil {
-			log.Error("get limiter")
-			http.Error(w, "internal server error", http.StatusInternalServerError)
+			log.Error("internal middleware error", zap.Error(ErrGetLimiter))
+			http.Error(w, httputil.InternalServerErrorMsg, http.StatusInternalServerError)
 
 			return
 		}
@@ -44,8 +56,8 @@ func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 		w.Header().Set("X-Ratelimit-Remaining", remaining)
 
 		if !limiter.Allow() {
-			log.Error("too many requests")
-			http.Error(w, "too many requests", http.StatusTooManyRequests)
+			log.Error("rate limit exceeded", zap.Error(ErrRateLimit))
+			http.Error(w, ErrRateLimit.Error(), http.StatusTooManyRequests)
 
 			return
 		}

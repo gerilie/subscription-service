@@ -1,10 +1,15 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/yushafro/effective-mobile-tz/pkg/logger"
+	"go.uber.org/zap"
 )
+
+// ErrRequireBody indicates the request body is required (HTTP 400).
+var ErrRequireBody = fmt.Errorf("%w: request body must not be empty", ErrMiddleware)
 
 // RequireBody is a middleware function that checks if the request body is not empty.
 // It takes an http.Handler as an argument and returns an http.Handler.
@@ -16,8 +21,8 @@ func RequireBody(next http.Handler) http.Handler {
 		log := logger.FromContext(ctx)
 
 		if r.ContentLength == 0 {
-			log.Error("Empty request body error")
-			http.Error(w, "request body is empty", http.StatusBadRequest)
+			log.Error("request body validation failed", zap.Error(ErrRequireBody))
+			http.Error(w, ErrRequireBody.Error(), http.StatusBadRequest)
 
 			return
 		}
