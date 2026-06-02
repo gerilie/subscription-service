@@ -20,7 +20,7 @@ func NoBody(next http.Handler) http.Handler {
 		ctx := r.Context()
 		log := logger.FromContext(ctx)
 
-		if r.ContentLength != 0 {
+		if r.ContentLength > 0 {
 			log.Error("request body validation failed", zap.Error(ErrNoBody))
 			http.Error(w, ErrNoBody.Error(), http.StatusBadRequest)
 
