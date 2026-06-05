@@ -10,7 +10,12 @@ import (
 func GetClientIP(r *http.Request) string {
 	xri := r.Header.Get("X-Real-IP")
 	if xri != "" {
-		return xri
+		ip, _, err := net.SplitHostPort(xri)
+		if err != nil {
+			return xri
+		}
+
+		return ip
 	}
 
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
