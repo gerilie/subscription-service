@@ -21,8 +21,9 @@ type NoExpected[A any] struct {
 	Error error
 }
 
-// Request represents an HTTP request with a method, body and path.
+// Request represents an HTTP request.
 type Request[B any] struct {
+	Code   int
 	Method string
 	Path   string
 	Body   B
