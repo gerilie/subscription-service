@@ -44,5 +44,5 @@ func handleValidationErrors(ctx context.Context, w http.ResponseWriter, err erro
 		return
 	}
 
-	http.Error(w, httputil.InternalServerErrorMsg, http.StatusInternalServerError)
+	http.Error(w, httputil.ErrInternalServer.Error(), http.StatusInternalServerError)
 }

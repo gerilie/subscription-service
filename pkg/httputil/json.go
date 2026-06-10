@@ -11,6 +11,10 @@ import (
 	"github.com/yushafro/effective-mobile-tz/pkg/deferfunc"
 )
 
+// ErrMismatch indicates that the request body contains a JSON type mismatch
+// or malformed JSON that cannot be properly decoded.
+var ErrMismatch = errors.New("invalid request body: type mismatch or malformed JSON")
+
 // DecodeJSON reads and decodes JSON request body into dst.
 // It writes appropriate HTTP errors for malformed input.
 func DecodeJSON[T any](ctx context.Context, w http.ResponseWriter, r *http.Request, dst *T) error {
@@ -26,14 +30,14 @@ func DecodeJSON[T any](ctx context.Context, w http.ResponseWriter, r *http.Reque
 		if errors.As(err, &unmarshalErr) || errors.As(err, &syntaxErr) {
 			http.Error(
 				w,
-				"invalid request body: type mismatch or malformed JSON",
+				ErrMismatch.Error(),
 				http.StatusBadRequest,
 			)
 
 			return fmt.Errorf("decode request body: %w", err)
 		}
 
-		http.Error(w, InternalServerErrorMsg, http.StatusInternalServerError)
+		http.Error(w, ErrInternalServer.Error(), http.StatusInternalServerError)
 
 		return fmt.Errorf("decode request body: %w", err)
 	}
@@ -45,7 +49,7 @@ func DecodeJSON[T any](ctx context.Context, w http.ResponseWriter, r *http.Reque
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	data, err := json.Marshal(v)
 	if err != nil {
-		http.Error(w, InternalServerErrorMsg, http.StatusInternalServerError)
+		http.Error(w, ErrInternalServer.Error(), http.StatusInternalServerError)
 
 		return fmt.Errorf("encode request body: %w", err)
 	}
@@ -55,7 +59,7 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 
 	_, err = w.Write(data)
 	if err != nil {
-		http.Error(w, InternalServerErrorMsg, http.StatusInternalServerError)
+		http.Error(w, ErrInternalServer.Error(), http.StatusInternalServerError)
 
 		return fmt.Errorf("write response body: %w", err)
 	}

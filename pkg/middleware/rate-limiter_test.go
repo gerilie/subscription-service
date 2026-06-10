@@ -92,7 +92,7 @@ func Test_RateLimiter_GetClientIPFailed(t *testing.T) {
 	mockNext.AssertNotCalled(t, "ServeHTTP")
 
 	require.Equal(t, http.StatusInternalServerError, w.Code)
-	require.Contains(t, w.Body.String(), httputil.InternalServerErrorMsg)
+	require.Contains(t, w.Body.String(), httputil.ErrInternalServer.Error())
 }
 
 func Test_RateLimiter_GetLimiterFailed(t *testing.T) {
@@ -117,5 +117,5 @@ func Test_RateLimiter_GetLimiterFailed(t *testing.T) {
 	mockNext.AssertNotCalled(t, "ServeHTTP")
 
 	require.Equal(t, http.StatusInternalServerError, w.Code)
-	require.Contains(t, w.Body.String(), httputil.InternalServerErrorMsg)
+	require.Contains(t, w.Body.String(), httputil.ErrInternalServer.Error())
 }

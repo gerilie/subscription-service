@@ -35,7 +35,7 @@ func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 		ip := httputil.GetClientIP(r)
 		if ip == "" {
 			log.Error("internal middleware error", zap.Error(ErrGetClientIP))
-			http.Error(w, httputil.InternalServerErrorMsg, http.StatusInternalServerError)
+			http.Error(w, httputil.ErrInternalServer.Error(), http.StatusInternalServerError)
 
 			return
 		}
@@ -43,7 +43,7 @@ func RateLimiter(next http.Handler, l ratelimiter.IPRateLimiter) http.Handler {
 		limiter := l.GetLimiter(ip)
 		if limiter == nil {
 			log.Error("internal middleware error", zap.Error(ErrGetLimiter))
-			http.Error(w, httputil.InternalServerErrorMsg, http.StatusInternalServerError)
+			http.Error(w, httputil.ErrInternalServer.Error(), http.StatusInternalServerError)
 
 			return
 		}
