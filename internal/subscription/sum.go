@@ -86,24 +86,29 @@ func (r *pgRepository) sum(ctx context.Context, model subSum) (subSum, error) {
 
 	qb := r.builder.Select().
 		Column(squirrel.Expr(`
-        COALESCE(SUM(
-            (
-                EXTRACT(YEAR FROM age(
-                    LEAST(end_date, ?),
-                    GREATEST(start_date, ?)
-                )) * 12 +
-                EXTRACT(MONTH FROM age(
-                    LEAST(end_date, ?),
-                    GREATEST(start_date, ?)
-                ))
-            ) * price
-        ), 0)
+    COALESCE(SUM(
+        (
+          EXTRACT(YEAR FROM age(
+            LEAST(COALESCE(end_date, ?), ?),
+            GREATEST(start_date, ?)
+        )) * 12 +
+          EXTRACT(MONTH FROM age(
+            LEAST(COALESCE(end_date, ?), ?),
+            GREATEST(start_date, ?)
+        ))
+      ) * price
+    ), 0)
     `,
-			model.endDate, model.startDate,
-			model.endDate, model.startDate)).
+			model.endDate, model.endDate, model.startDate,
+			model.endDate, model.endDate, model.startDate)).
 		From("subscriptions").
 		Where(squirrel.LtOrEq{"start_date": model.endDate}).
-		Where(squirrel.GtOrEq{"end_date": model.startDate})
+		Where(
+			squirrel.Or{
+				squirrel.GtOrEq{"end_date": model.startDate},
+				squirrel.Eq{"end_date": nil},
+			},
+		)
 
 	if model.serviceName != "" {
 		qb = qb.Where(squirrel.Eq{"service_name": model.serviceName})
