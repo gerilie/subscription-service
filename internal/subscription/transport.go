@@ -29,6 +29,7 @@ const (
 type Server interface {
 	Start(ctx context.Context) error
 	Stop(ctx context.Context) error
+	Handler() http.Handler
 }
 
 type server struct {
@@ -80,6 +81,10 @@ func (s *server) Start(ctx context.Context) error {
 // Stop stops the HTTP server.
 func (s *server) Stop(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
+}
+
+func (s *server) Handler() http.Handler {
+	return s.buildHandler()
 }
 
 // buildHandler builds the HTTP handler for the server.

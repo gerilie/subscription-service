@@ -9,6 +9,7 @@ type Expected[A, E any] struct {
 	Args     A
 	Expected E
 	Error    error
+	IsError  bool
 }
 
 // NoExpected represents a generic test case with input arguments
@@ -16,9 +17,10 @@ type Expected[A, E any] struct {
 //
 // A is the type of input arguments.
 type NoExpected[A any] struct {
-	Name  string
-	Args  A
-	Error error
+	Name    string
+	Args    A
+	Error   error
+	IsError bool
 }
 
 // Request represents an HTTP request.
