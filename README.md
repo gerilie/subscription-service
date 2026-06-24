@@ -1,16 +1,19 @@
-## prod mode
-1. run `make prod-up`
-2. visit [api](http://localhost:8080/swagger/index.html)
+Реализован REST-сервис для агрегации данных об онлайн
+подписках пользователей.
 
-## dev mode
-1. run `make dev-up`
-3. visit [api](http://localhost:3000/swagger/index.html)
+## Продакшен
+1. Запустить `make prod-up`
+2. Посетить [api](http://localhost:8080/swagger/index.html)
 
-## environments
-### logger
+## Разработка
+1. Запустить `make dev-up`
+3. Посетить [api](http://localhost:3000/swagger/index.html)
+
+## Переменные окружения
+### Логгер
 - level
-   - debug *(dev default)*
-   - info *(prod default)*
+   - debug *(dev по-умолчанию)*
+   - info *(prod по-умолчанию)*
    - warn
    - error
    - fatal
