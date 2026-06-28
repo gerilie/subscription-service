@@ -16,6 +16,8 @@ REST API для управления пользовательскими подп
 		- [Production](#production)
 	- [📄 Swagger](#-swagger)
 	- [📸 Демонстрация работы](#-демонстрация-работы)
+		- [▶️ Скринкаст (2 минуты)](#️-скринкаст-2-минуты)
+		- [📸 Скриншоты](#-скриншоты)
 	- [📦 Модель подписки](#-модель-подписки)
 		- [Поля](#поля)
 	- [📋 API](#-api)
@@ -59,7 +61,7 @@ REST API для управления пользовательскими подп
 - **Многоокружечный деплой** (dev/prod через docker-compose)
 - **Автоматическая генерация Swagger** из кода
 - **Makefile как единая точка входа** для всей команды
-- **Pre-commit хуки** с автоматическим добавлением у себя через `make prek`
+- **Pre-commit хуки** с автоматическим добавлением локально через `make git-hooks`
 
 ---
 
@@ -149,11 +151,27 @@ http://localhost:3000/swagger/index.html (Dev)
 ---
 
 ## 📸 Демонстрация работы
+
+### ▶️ Скринкаст (2 минуты)
 https://github.com/user-attachments/assets/dde1a15a-c659-4c1a-9383-d26fd5564385
 
- Список подписок | Создание подписки | Ошибка валидации, Bad Request |
+**Что показано в видео:**
+- ✅ Поднятие окружения через `make dev-up`
+- ✅ Показ Swagger-документации
+- ✅ Создание подписки через программу для тестирования API (Insomnia)
+- ✅ Получение списка с фильтрацией и пагинацией
+- ✅ Расчет суммарной стоимости за период
+- ✅ Структурированное логирование в терминале
+
+> 💡 **Видео без звука**, но с пояснениями в интерфейсе. Все эндпоинты документированы в Swagger.
+
+---
+
+### 📸 Скриншоты
+
+ Создание подписки | Ошибка валидации | Список подписок |
 |--------------|----------------------|------------|
-| ![Список подписок](https://raw.githubusercontent.com/gerilie/subscription-service/1dfa36d97f1ef21a9b1733f174e035befa697e06/list.png) | ![Создание подписки](https://raw.githubusercontent.com/gerilie/subscription-service/1dfa36d97f1ef21a9b1733f174e035befa697e06/create.png) | ![Ошибка валидации, Bad Request](https://raw.githubusercontent.com/gerilie/subscription-service/1dfa36d97f1ef21a9b1733f174e035befa697e06/bad-request.png) |
+| ![Создание подписки](https://raw.githubusercontent.com/gerilie/subscription-service/1dfa36d97f1ef21a9b1733f174e035befa697e06/create.png) | ![Ошибка валидации, Bad Request](https://raw.githubusercontent.com/gerilie/subscription-service/1dfa36d97f1ef21a9b1733f174e035befa697e06/bad-request.png) | ![Список подписок](https://raw.githubusercontent.com/gerilie/subscription-service/1dfa36d97f1ef21a9b1733f174e035befa697e06/list.png) |
 
 ---
 
