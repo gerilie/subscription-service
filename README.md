@@ -149,6 +149,7 @@ http://localhost:3000/swagger/index.html (Dev)
 ---
 
 ## 📸 Демонстрация работы
+https://github.com/user-attachments/assets/dde1a15a-c659-4c1a-9383-d26fd5564385
 
  Список подписок | Создание подписки | Ошибка валидации, Bad Request |
 |--------------|----------------------|------------|
