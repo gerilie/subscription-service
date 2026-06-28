@@ -47,6 +47,7 @@ REST API для управления пользовательскими подп
 	- [🔧 Генерация кода](#-генерация-кода)
 	- [📦 Миграции](#-миграции)
 	- [🪝 Git Hooks](#-git-hooks)
+	- [🤝 Вклад в проект](#-вклад-в-проект)
 	- [📄 Лицензия](#-лицензия)
 
 </details>
@@ -343,22 +344,13 @@ MM-YYYY
 
 ## 🧠 Структура проекта
 
-```text
-.
-├── cmd/
-│   └── subscription/
-├── internal/
-├── migrations/
-├── docs/
-├── docker-compose.yml
-├── docker-compose.dev.yml
-├── docker-compose.prod.yml
-├── Dockerfile
-├── Makefile
-├── .env.dev
-├── .env.prod
-└── README.md
-```
+[Вставь сюда схему, нарисованную в draw.io]
+
+- `cmd/subscription` — точка входа
+- `internal/` — бизнес-логика (не экспортируется)
+- `migrations/` — версионирование схемы
+- `docs/` — автогенерируемая Swagger-документация
+- `pkg/` - библиотечные пакеты
 ---
 
 ## 📝 Логирование
@@ -486,6 +478,14 @@ migrations/
 ```bash
 make git-hooks
 ```
+
+---
+
+## 🤝 Вклад в проект
+
+Любой вклад приветствуется!
+
+Перед созданием Pull Request, пожалуйста, ознакомься с [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
