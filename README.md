@@ -344,7 +344,7 @@ MM-YYYY
 
 ## 🧠 Структура проекта
 
-[Схема]
+<img width="491" height="1775" alt="clean_architecture_diagram" src="https://github.com/user-attachments/assets/0b26eefa-de5d-4c99-937b-3a62ab03fe59" />
 
 - `cmd/subscription` — точка входа
 - `internal/` — бизнес-логика (не экспортируется)
